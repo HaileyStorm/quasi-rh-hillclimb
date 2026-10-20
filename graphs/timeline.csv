@@ -17,5 +17,5 @@ time_utc,contributor,theta_exact,theta_decimal,status
 2026-10-17 11:32,Zhongpai Gao,87483/100000,0.874830000000,Lean-verified record
 2026-10-20 00:51,Sil,874828524351/1000000000000,0.874828524351,Lean-verified record
 2026-10-20 01:49,ArviFoxy (current record),174963413/200000000,0.874817065000,Lean-verified record
-2026-10-20 15:00,rohanarun · three levels (conditional),874812431/1000000000,0.874812431000,"conditional (H1-H5), not Lean-verified"
-2026-10-20 21:00,rohanarun · four levels (conditional),437405141/500000000,0.874810282000,"conditional (H1-H5), not Lean-verified"
+2026-10-20 15:00,rohanarun · 3 levels (conditional),874812431/1000000000,0.874812431000,"conditional (H1-H5), not Lean-verified"
+2026-10-20 21:00,rohanarun · 4 levels (conditional),437405141/500000000,0.874810282000,"conditional (H1-H5), not Lean-verified"

@@ -45,8 +45,8 @@ RECORDS = [
     ("2026-10-20 01:49", "ArviFoxy (current record)", Fr(174963413, 200000000), "0.874817065"),
 ]
 CONDITIONAL = [
-    ("2026-10-20 15:00", "rohanarun · three levels (conditional)", Fr(874812431, 10**9), "≤ 0.874812431"),
-    ("2026-10-20 21:00", "rohanarun · four levels (conditional)", Fr(437405141, 500000000), "≤ 0.874810282"),
+    ("2026-10-20 15:00", "rohanarun · 3 levels (conditional)", Fr(874812431, 10**9), "≤ 0.874812431  (−4.6·10⁻⁶)"),
+    ("2026-10-20 21:00", "rohanarun · 4 levels (conditional)", Fr(437405141, 500000000), "≤ 0.874810282  (−6.8·10⁻⁶)"),
 ]
 
 
@@ -59,10 +59,10 @@ y = [float(r[2]) for r in RECORDS]
 tc = [ts(r[0]) for r in CONDITIONAL]
 yc = [float(r[2]) for r in CONDITIONAL]
 
-fig = plt.figure(figsize=(13, 7.4), facecolor=SURF)
+fig = plt.figure(figsize=(14, 7.4), facecolor=SURF)
 fig.text(0.05, 0.945, "Quasi-RH: the zero-free boundary θ over time", fontsize=17, weight="bold")
 fig.text(0.05, 0.905, "Best all-moduli Dirichlet boundary (zero-free for Re s > θ). Lower is better. "
-         "Blue: Lean-verified records. Orange: conditional, not Lean-verified.", fontsize=11, color=INK2)
+         "Blue: Lean-verified records. Orange: conditional, not Lean-verified (gain vs current record in brackets).", fontsize=11, color=INK2)
 ax = fig.add_axes([0.08, 0.12, 0.90, 0.74], facecolor=SURF)
 
 ax.step(t + [tc[-1]], y + [y[-1]], where="post", color=BLUE, lw=2, zorder=2)
