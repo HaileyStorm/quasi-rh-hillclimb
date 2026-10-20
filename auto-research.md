@@ -13,7 +13,7 @@ This file is for automated research agents (and humans) who want to push the Qua
 | Edge of the frozen architecture | σ₀ ≈ 7/8 − 4.293·10⁻⁵ (ℓ ≈ 1/6 + 1.7172·10⁻⁴) |
 | Ceiling with idealized inputs | ≈ 0.864 (perfect row counts and large sieve) |
 | Lean tracker record (separate setting) | θ = 0.874817065 (QuasiRiemannTracker PR #67) |
-| Conditional nested levels on that record | θ ≤ 0.874812431 (three levels), θ ≤ 0.874810282 (four levels), conditional on H1–H5 (`depth3/PROOF.md`) |
+| Conditional nested levels on that record | θ ≤ 0.874812431 (three levels), θ ≤ 0.874810282 (four levels), θ ≤ 0.874809989 (six levels, larger H4 caps), conditional on H1–H5 (`depth3/PROOF.md`) |
 
 Everything is conditional on the preprint's 7/8 theorem. See `README.md` and `AUDIT_SUMMARY.md`.
 

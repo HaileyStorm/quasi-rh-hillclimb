@@ -3,6 +3,7 @@ PR #67 (GTimG/QuasiRiemannTracker, two-level-affine-20261019).
 
     python certify_depth3.py          # the three-level point (the new claim)
     python certify_depth3.py --pr67   # PR #67's own point, as a check of this port
+    python certify_depth3.py --five   # five levels (also --four, --six)
 
 All rational quantities are computed exactly (fractions.Fraction). Statements over a
 range of bins are rational functions of the bin d; they are proved by exact real-root
@@ -242,6 +243,19 @@ def main():
         q = (Q(31901, 50000), Q(687, 1000), Q(4419, 6250), Q(36399, 50000))
         s = Q(4031793, 100000000)
         c, th, out = certify(q, s, Q(874810282, 10**9), "four affine levels")
+        width_floor_room(c)
+        indicators(c)
+    elif "--five" in sys.argv:      # found by constrained_n.py 5
+        q = (Q(31901, 50000), Q(173193, 250000), Q(141679, 200000), Q(358939, 500000), Q(731033, 1000000))
+        s = Q(4033127, 100000000)
+        c, th, out = certify(q, s, Q(874810045, 10**9), "five affine levels")
+        width_floor_room(c)
+        indicators(c)
+    elif "--six" in sys.argv:       # found by constrained_n.py 6, seeded from the five-level point
+        q = (Q(31901, 50000), Q(347923, 500000), Q(140837, 200000), Q(142669, 200000),
+             Q(361461, 500000), Q(3681, 5000))
+        s = Q(806709, 20000000)
+        c, th, out = certify(q, s, Q(874809989, 10**9), "six affine levels")
         width_floor_room(c)
         indicators(c)
     else:
