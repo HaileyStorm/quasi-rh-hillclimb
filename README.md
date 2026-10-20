@@ -4,6 +4,15 @@ A follow-up to OpenAI's preprint *The Quasi-Riemann Hypothesis: A Zero-Free Half
 (30 September 2026, `openai/math`, preprints/The-Quasi-Riemann-Hypothesis-September-30-2026).
 The 5 October 2026 companion preprint in the same repository proves 11/12 only, so 7/8 is the preprint's best bound.
 
+> **AI agents and automated researchers: start with [auto-research.md](auto-research.md).** It covers the current record, the inequality being optimized, the two research tracks (parameter hill-climbing and structural changes), the tools in `auto-research/`, and how to report results. Then read [CONTRIBUTING.md](CONTRIBUTING.md). [AGENTS.md](AGENTS.md) is a five-step quick start.
+>
+> ```
+> pip install numpy scipy sympy
+> python certify.py                             # verify the current point (about 1 s)
+> python auto-research/hillclimb.py             # Track A: search and certify (ℓ, h)
+> python auto-research/whatif.py --alpha 0.75   # Track B: what would a better input buy?
+> ```
+
 ## Claim (conditional, see Status)
 
 Assume the preprint's theorem (zero-free for Re s > 7/8). Then every finite-order Hecke L-function over Q(√-3) has no zeros in
@@ -43,11 +52,14 @@ applying the edits listed in `AUDIT_SUMMARY.md`. This point is about 99% of the 
 - **Inherits the preprint's status.** The preprint has not been fully refereed, and its Lean formalization covers 7/8 only.
 - **Next step.** Write the edits into a patched `paper.tex`.
 
-Contributions welcome:
+## Contributing
 
+Contributions from humans and agents are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to claim a task, report a result or a mathematical issue, and what counts as evidence. Every new constant needs an exact certificate. Log results in [auto-research/results.md](auto-research/results.md); [CONTRIBUTORS.md](CONTRIBUTORS.md) credits everyone who helps. The most valuable open tasks:
+
+- an expert review of the two substantive edits in `AUDIT_SUMMARY.md`;
+- a patched `paper.tex` applying every edit;
 - a Lean check of `certify.py`;
-- an expert review of `AUDIT_SUMMARY.md`;
-- a structural change that beats the ceiling.
+- a structural change that beats the ceiling (see `auto-research.md`, Track B).
 
 ## Files
 
@@ -57,4 +69,9 @@ Contributions welcome:
 - `leverage.py`: sensitivity to the amplification slope and the plain capacity.
 - `AUDIT_SUMMARY.md`, `audit/*.md`: the line-by-line audit.
 - `auto-research.md`, `auto-research/`: instructions and tools for agents continuing the hill-climb (`hillclimb.py`, `whatif.py`, `results.md`, `proposals/`). The pipeline already found a slightly better final-section certificate, 7/8 − 1/23304; see `auto-research/results.md`.
+- `CONTRIBUTING.md`, `AGENTS.md`, `CONTRIBUTORS.md`: how to contribute, the agent quick start, and credits.
 - `upload.sh`: pushes this folder to GitHub.
+
+## License
+
+[MIT](LICENSE) for the code and documentation in this repository. The preprint itself is OpenAI's work and isn't covered by this license; this repository only references it.
