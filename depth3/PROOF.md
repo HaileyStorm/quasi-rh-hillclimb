@@ -1,4 +1,4 @@
-# A third affine level: θ ≤ 0.874812431, conditionally
+# Nested affine levels: θ ≤ 0.874812431 (three levels) and θ ≤ 0.874810282 (four levels), conditionally
 
 **Status: conditional, not Lean-verified.** This is a proposal for the Lean tracker
 ([GTimG/QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker)), whose record
@@ -140,12 +140,46 @@ None of H1–H5 should move the class bound, which depends only on the first ste
 until they are written in Lean the theorem is conditional, and any of them could fail in a way
 this note does not foresee.
 
+## Update: four levels, θ ≤ 0.874810282 (same hypotheses)
+
+Nesting one more step gives **θ ≤ 437405141/500000000 = 0.874810282**, another 2.15·10⁻⁶
+below the three-level bound and 6.78·10⁻⁶ below the tracker record. It needs H1–H5 at depth
+four; if H1 is written once as a recursive step (a step that deletes into the region of the
+next step), depth four needs no new structure, only the deeper instance and larger H4 caps.
+
+Point: q₀ = 31901/50000, q₁ = 687/1000, q₂ = 4419/6250, q₃ = 36399/50000, window top
+s = 4031793/100000000. Class bound 0.8748102817…; `python certify_depth3.py --four`:
+**65/65 checks**, including depth-2, 3 and 4 HIGH reserves ≥ 8·10⁻⁸.
+
+**Why q₁ is not the unconstrained optimum.** Deeper chains push the step-0 child further over
+the old region, so the reflection / old-moment margin of H4 needs a higher second-step width
+floor W ≈ overshoot/(7/1000), which eats the branch-D direct-deletion room (it must stay
+above ≈ 1.42·10⁻³). `depth_scan.py` shows the trade-off at the unconstrained optima:
+
+| levels | class bound | overshoot over old | width floor | branch-D room |
+|---|---|---|---|---|
+| 2 (record) | 0.8748170645 | 2.16·10⁻³ | 0.400 | 0.0204 |
+| 3 | 0.8748124303 | 2.90·10⁻³ | 0.416 | 0.0158 |
+| 4 (unconstrained) | 0.8748100879 | 3.28·10⁻³ | 0.470 | 0.0004 ✗ |
+| 5 (unconstrained) | 0.8748086741 | 3.51·10⁻³ | 0.503 | −0.0090 ✗ |
+| 8 (unconstrained) | 0.8748065489 | 3.86·10⁻³ | 0.553 | −0.0231 ✗ |
+
+Raising q₁ to 0.687 (`constrained4.py`) cuts the overshoot to 3.24·10⁻³ and restores a room
+of 2.32·10⁻³, at a cost of 2·10⁻¹⁰ in the bound. Five or more levels would need a different
+H4 fix (raising δ_R with a smaller ξ_R, or rewriting the comparison against the new region);
+the bound would then approach ≈ 0.87480.
+
+The room formula is our reading of `TwoLevelSplit.directDeletionRoom` (it reproduces the
+record's 0.0204), so this check is evidence for H4's feasibility, not part of the proof.
+
 ## What is checked here, and how
 
 ```
 pip install sympy mpmath
-python certify_depth3.py          # 54/54 checks, the three-level point (about 1 s)
-python certify_depth3.py --pr67   # 45/45 checks at PR #67's point, as a test of the port
+python certify_depth3.py          # 56/56 checks, the three-level point (about 1 s)
+python certify_depth3.py --four   # 65/65 checks, the four-level point
+python certify_depth3.py --pr67   # 47/47 checks at PR #67's point, as a test of the port
+python depth_scan.py              # bound and H4 indicators for 2-8 levels
 python identity.py                # prints 0 0: the reserve split and growth identities
 python solve.py three             # how the junctions were found (search only)
 ```
@@ -158,7 +192,7 @@ python solve.py three             # how the junctions were found (search only)
 - `certify_depth3.py` proves every arithmetic condition listed in sections 1–3 exactly:
   rational arithmetic, exact real-root counting for statements over a range of bins, and
   outward-rounded rational intervals for the two square roots. Saved output:
-  `certify_output.txt`, `certify_pr67_output.txt`.
+  `certify_output.txt`, `certify_four_output.txt`, `certify_pr67_output.txt`, `depth_scan_output.txt`.
 - `reports/` holds the four readings of PR #67's Lean (A: per-cell certificates; B: LOW
   dispatch; C: joint HIGH count; D: physical LOW child and second step) and their synthesis
   `DEPTH3_ANALYSIS.md`. They were run at a slightly earlier solution of the chain

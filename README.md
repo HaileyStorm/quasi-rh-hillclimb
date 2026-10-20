@@ -29,7 +29,9 @@ applying the edits listed in `AUDIT_SUMMARY.md`. This point is about 99% of the 
 
 ## Separate track: a third affine level for the Lean tracker (conditional)
 
-The Lean-verified record is on the [QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker): ArviFoxy's PR #67, θ = 174963413/200000000 ≈ 0.874817065, well below the bound above. [`depth3/`](depth3/PROOF.md) extends PR #67's two affine levels to three and gets **θ ≤ 874812431/10⁹ ≈ 0.874812431**, about 4.6·10⁻⁶ lower, **conditional on five structural hypotheses (H1–H5) that are not yet in Lean**. The arithmetic is certified exactly (`python depth3/certify_depth3.py`, 54/54 checks; the same code reproduces PR #67's own constants). It is not a tracker record until the full proof checks in Lean.
+The Lean-verified record is on the [QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker): ArviFoxy's PR #67, θ = 174963413/200000000 ≈ 0.874817065, well below the bound above. [`depth3/`](depth3/PROOF.md) extends PR #67's two affine levels to three and gets **θ ≤ 874812431/10⁹ ≈ 0.874812431**, about 4.6·10⁻⁶ lower, and a fourth level gets **θ ≤ 0.874810282** (6.8·10⁻⁶ below the record), both **conditional on five structural hypotheses (H1–H5) that are not yet in Lean**. The arithmetic is certified exactly (`python depth3/certify_depth3.py` and `--four`; the same code reproduces PR #67's own constants). It is not a tracker record until the full proof checks in Lean.
+
+![The best boundary over time, with contributors](graphs/timeline.png)
 
 ## Main structural facts
 

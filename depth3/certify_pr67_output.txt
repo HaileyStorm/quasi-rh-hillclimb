@@ -6,7 +6,8 @@ junctions: q0 = 159503/250000 = 0.638012, q1 = 702651/1000000 = 0.702651   windo
    T_0: price 0.698120687037, intercept 0.993552532671
    T_1: price 0.749833333333, intercept 1.000000000000
   [OK] junctions increase and stay below 3/4
-  [OK] q0 in [3/5, 17/25]; later junctions in [17/25, 18/25]
+  [OK] q0 in [3/5, 17/25] and rho(q0) in [1/4, 23/50] (first-step constants)
+  [OK] later junctions in [3/5, 3/4) (inside the zero-density range)
   [OK] step 0: price of T_0 <= slot price (rate gap, TwoLevelRate)   6.981206870e-01
   [OK] step 0: k - q I > 0 (amplifier ratio defined)
   [OK] step 0: amplifier cost 5 - 6 rho(q_j) > 0
@@ -63,4 +64,8 @@ junctions: q0 = 159503/250000 = 0.638012, q1 = 702651/1000000 = 0.702651   windo
    Lean (PR #67): class bound in [0.874817064464, 0.874817064465], highTwo 2.30e-8 / 2.10e-8
    here:          class bound in [0.874817064464, 0.874817064464]
 
-45/45 checks OK
+-- H4 feasibility: width floor vs direct-deletion room
+   max overshoot over old = 2.1570e-03; width floor W = 0.4000
+  [OK] direct-deletion room at that width floor >= 1.5e-3   2.0430e-02
+
+47/47 checks OK

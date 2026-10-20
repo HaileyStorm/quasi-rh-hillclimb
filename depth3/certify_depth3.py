@@ -88,8 +88,10 @@ def certify(junctions, s, theta_claim, label):
         T = c.T[j]
         print(f"   T_{j}: price {float(T.price):.12f}, intercept {float(T.intercept):.12f}")
     check("junctions increase and stay below 3/4", all(c.q[i] < c.q[i + 1] for i in range(n - 1)) and c.q[-1] < Q(3, 4))
-    check("q0 in [3/5, 17/25]; later junctions in [17/25, 18/25]",
-          Q(3, 5) <= q0 <= Q(17, 25) and all(Q(17, 25) <= q <= Q(18, 25) for q in c.q[1:]))
+    check("q0 in [3/5, 17/25] and rho(q0) in [1/4, 23/50] (first-step constants)",
+          Q(3, 5) <= q0 <= Q(17, 25) and Q(1, 4) <= density(q0) <= Q(23, 50))
+    check("later junctions in [3/5, 3/4) (inside the zero-density range)",
+          all(Q(3, 5) <= q < Q(3, 4) for q in c.q[1:]))
     for j in range(n):
         T = c.T[j]
         check(f"step {j}: price of T_{j} <= slot price (rate gap, TwoLevelRate)", T.price <= KAPPA, fl(T.price, 9))
@@ -201,6 +203,33 @@ def indicators(c):
     print(f"   first-step plane slope lambda = {float(c.lam):.4f}")
 
 
+def width_floor_room(c):
+    """H4 feasibility for the reflection / old-moment margin. The record needs the step-0
+    child's overshoot over the OLD region to be at most (7/1000) W at the second-step width
+    floor W = 2/5. Deeper chains overshoot more, so W must rise to overshoot/(7/1000) (+1e-3);
+    the price is paid by the branch-D direct-deletion room
+        r(1 - 6 a0 - 2W) - (r(oldGap(b) + 6 a0) - a0),   r = q0/(6 kappa),
+    which must stay above LR0 + r(1/100 + pads), about 1.42e-3 (Reports A item 5, D item 3).
+    The room formula is our reading of TwoLevelSplit.directDeletionRoom; at PR #67's point
+    it gives 0.0204, matching the record."""
+    print("\n-- H4 feasibility: width floor vs direct-deletion room")
+    ft, s = FIRST_CELL_TOP, c.s
+    ov = []
+    for b in (ft, s):
+        a, dl, g = c.cascade(b)
+        ov.append(OLD.overshoot(c.B - (c.lam - 1) * b - dl[0], b - dl[0], 1 - 6 * a[0]))
+    W = max(Q(2, 5), max(ov) / Q(7, 1000) + Q(1, 1000))
+    r = c.q[0] / (6 * KAPPA)
+    rooms = []
+    for b in (ft, s):
+        a, dl, g = c.cascade(b)
+        oldgap = c.B - 1 + (6 * KAPPA - c.lam) * b
+        rooms.append(r * (1 - 6 * a[0] - 2 * W) - (r * (oldgap + 6 * a[0]) - a[0]))
+    print(f"   max overshoot over old = {float(max(ov)):.4e}; width floor W = {float(W):.4f}")
+    check("direct-deletion room at that width floor >= 1.5e-3", min(rooms) >= Q(15, 10000),
+          f"{float(min(rooms)):.4e}")
+
+
 def main():
     if "--pr67" in sys.argv:
         q = (Q(159503, 250000), Q(702651, 1000000))
@@ -208,10 +237,18 @@ def main():
         c, th, out = certify(q, s, Q(174963413, 200000000), "PR #67 (two levels), as a check of the port")
         print("\n   Lean (PR #67): class bound in [0.874817064464, 0.874817064465], highTwo 2.30e-8 / 2.10e-8")
         print(f"   here:          class bound in [{float(th.lo):.12f}, {float(th.hi):.12f}]")
+        width_floor_room(c)
+    elif "--four" in sys.argv:
+        q = (Q(31901, 50000), Q(687, 1000), Q(4419, 6250), Q(36399, 50000))
+        s = Q(4031793, 100000000)
+        c, th, out = certify(q, s, Q(874810282, 10**9), "four affine levels")
+        width_floor_room(c)
+        indicators(c)
     else:
         q = (Q(319009, 500000), Q(687933, 1000000), Q(179477, 250000))
         s = Q(4023081, 100000000)
         c, th, out = certify(q, s, Q(874812431, 10**9), "three affine levels")
+        width_floor_room(c)
         indicators(c)
     bad = [n for n, ok, _ in RESULTS if not ok]
     print(f"\n{len(RESULTS) - len(bad)}/{len(RESULTS)} checks OK" + ("" if not bad else f"; FAILED: {bad}"))

@@ -7,7 +7,8 @@ junctions: q0 = 319009/500000 = 0.638018, q1 = 687933/1000000 = 0.687933, q2 = 1
    T_1: price 0.715141889724, intercept 0.996146975618
    T_2: price 0.749833333333, intercept 1.000000000000
   [OK] junctions increase and stay below 3/4
-  [OK] q0 in [3/5, 17/25]; later junctions in [17/25, 18/25]
+  [OK] q0 in [3/5, 17/25] and rho(q0) in [1/4, 23/50] (first-step constants)
+  [OK] later junctions in [3/5, 3/4) (inside the zero-density range)
   [OK] step 0: price of T_0 <= slot price (rate gap, TwoLevelRate)   6.821184138e-01
   [OK] step 0: k - q I > 0 (amplifier ratio defined)
   [OK] step 0: amplifier cost 5 - 6 rho(q_j) > 0
@@ -70,6 +71,10 @@ junctions: q0 = 319009/500000 = 0.638018, q1 = 687933/1000000 = 0.687933, q2 = 1
   [OK] depth 3: reserve is affine in the cell (exact second difference = 0)
   [OK] depth 3: total amplifier width <= 1/6   0.01557
 
+-- H4 feasibility: width floor vs direct-deletion room
+   max overshoot over old = 2.9048e-03; width floor W = 0.4160
+  [OK] direct-deletion room at that width floor >= 1.5e-3   1.5805e-02
+
 -- indicators for the retuned constants (H4; values, not checks)
    first cell: overshoot of the step-1 child over the OLD region = 2.904810e-03   (record cap 7/2500 = 2.8e-3)
    first cell: slot cap (b - d_0)/(2/5) = 0.068575   (record cap 0.0681)
@@ -83,4 +88,4 @@ junctions: q0 = 319009/500000 = 0.638018, q1 = 687933/1000000 = 0.687933, q2 = 1
    slope of region T_1: 6 k_1 = 4.2909 (record mesh bound uses <= 4)
    first-step plane slope lambda = 3.7337
 
-54/54 checks OK
+56/56 checks OK

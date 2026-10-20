@@ -1,0 +1,21 @@
+time_utc,contributor,theta_exact,theta_decimal,status
+2026-09-30 12:00,OpenAI (preprint),7/8,0.875000000000,Lean-verified record
+2026-10-08 00:00,Argonaut Math,3499999/4000000,0.874999750000,Lean-verified record
+2026-10-08 16:18,Baiying Liu,874957069799168740018340006959/1000000000000000000000000000000,0.874957069799,Lean-verified record
+2026-10-09 11:37,Tim Gehrunger / ProofCouncil,874957019421/1000000000000,0.874957019421,Lean-verified record
+2026-10-10 13:35,Akash Levy,10499/12000,0.874916666667,Lean-verified record
+2026-10-10 16:09,Hailey Collet,683505193/781250000,0.874886647040,Lean-verified record
+2026-10-13 06:44,nielstron,87487/100000,0.874870000000,Lean-verified record
+2026-10-13 13:04,Kari Roegnvaldsson,4374347/5000000,0.874869400000,Lean-verified record
+2026-10-13 14:41,Kari Roegnvaldsson,87486797/100000000,0.874867970000,Lean-verified record
+2026-10-13 18:43,Hailey Collet,874861/1000000,0.874861000000,Lean-verified record
+2026-10-14 10:07,Zhongpai Gao,4374299/5000000,0.874859800000,Lean-verified record
+2026-10-14 22:53,timbalud,8748559/10000000,0.874855900000,Lean-verified record
+2026-10-15 03:53,DaysSky,437423/500000,0.874846000000,Lean-verified record
+2026-10-15 05:29,Zhongpai Gao,21871/25000,0.874840000000,Lean-verified record
+2026-10-16 16:03,Zhongpai Gao,218709/250000,0.874836000000,Lean-verified record
+2026-10-17 11:32,Zhongpai Gao,87483/100000,0.874830000000,Lean-verified record
+2026-10-20 00:51,Sil,874828524351/1000000000000,0.874828524351,Lean-verified record
+2026-10-20 01:49,ArviFoxy (current record),174963413/200000000,0.874817065000,Lean-verified record
+2026-10-20 15:00,rohanarun · three levels (conditional),874812431/1000000000,0.874812431000,"conditional (H1-H5), not Lean-verified"
+2026-10-20 21:00,rohanarun · four levels (conditional),437405141/500000000,0.874810282000,"conditional (H1-H5), not Lean-verified"
