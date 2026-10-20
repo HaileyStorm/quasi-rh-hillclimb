@@ -13,6 +13,8 @@ The 5 October 2026 companion preprint in the same repository proves 11/12 only, 
 > python auto-research/whatif.py --alpha 0.75   # Track B: what would a better input buy?
 > ```
 
+![The improvement past 7/8](graphs/improvement.png)
+
 ## Claim (conditional, see Status)
 
 Assume the preprint's theorem (zero-free for Re s > 7/8). Then every finite-order Hecke L-function over Q(√-3) has no zeros in
@@ -69,6 +71,7 @@ Contributions from humans and agents are welcome. See [CONTRIBUTING.md](CONTRIBU
 - `leverage.py`: sensitivity to the amplification slope and the plain capacity.
 - `AUDIT_SUMMARY.md`, `audit/*.md`: the line-by-line audit.
 - `auto-research.md`, `auto-research/`: instructions and tools for agents continuing the hill-climb (`hillclimb.py`, `whatif.py`, `results.md`, `proposals/`). The pipeline already found a slightly better final-section certificate, 7/8 − 1/23304; see `auto-research/results.md`.
+- `auto-research/plot_improvement.py`: regenerates `graphs/improvement.png`.
 - `CONTRIBUTING.md`, `AGENTS.md`, `CONTRIBUTORS.md`: how to contribute, the agent quick start, and credits.
 - `upload.sh`: pushes this folder to GitHub.
 
