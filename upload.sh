@@ -1,15 +1,32 @@
 #!/usr/bin/env bash
-# Push this folder to https://github.com/rohanarun/quasi-rh-hillclimb
-# Run from inside the unzipped qrh_followup folder:  bash upload.sh
+# Sync this folder to https://github.com/rohanarun/quasi-rh-hillclimb and push.
+# Works for the first upload and for later updates, from any freshly unzipped copy.
+# Usage:  bash upload.sh ["commit message"]
 set -euo pipefail
 REPO="https://github.com/rohanarun/quasi-rh-hillclimb.git"
-cd "$(dirname "$0")"
-rm -rf __pycache__ auto-research/__pycache__
-if [ ! -d .git ]; then git init -q; fi
-git checkout -q -B main
+MSG="${1:-Update: contributing guide, MIT license, auto-research harness}"
+SRC="$(cd "$(dirname "$0")" && pwd)"
+TMP="$(mktemp -d)"
+trap 'rm -rf "$TMP"' EXIT
+
+if git clone -q "$REPO" "$TMP/repo" 2>/dev/null; then
+  cd "$TMP/repo"
+  if git rev-parse --verify -q origin/main >/dev/null; then
+    git checkout -q -B main origin/main; echo "Updating existing main branch."
+  else
+    git checkout -q -B main; echo "Repo is empty; first upload."
+  fi
+else
+  echo "Could not clone $REPO (check the URL and your GitHub login)."; exit 1
+fi
+
+# copy everything except git metadata and caches (files deleted locally are NOT deleted remotely)
+tar -C "$SRC" --exclude=.git --exclude=__pycache__ --exclude='*.pyc' -cf - . | tar -xf -
+
 git add -A
-git commit -q -m "Quasi-RH past 7/8: certificate, audit, auto-research harness" || echo "(nothing new to commit)"
-git remote remove origin 2>/dev/null || true
-git remote add origin "$REPO"
+if git diff --cached --quiet; then
+  echo "No changes to push."; exit 0
+fi
+git commit -q -m "$MSG"
 git push -u origin main
 echo "Done: https://github.com/rohanarun/quasi-rh-hillclimb"
