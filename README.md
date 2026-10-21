@@ -1,5 +1,7 @@
 # Quasi-RH: pushing the zero-free half-plane slightly past 7/8
 
+> **We're now sponsored by Agent37, so the first 100 contributors get Agent37 sandboxes for free to run experiments!** To qualify, submit a PR using our [auto-research.md](auto-research.md) and include your contact email in the PR description to redeem the offer. See [Sponsors](#sponsors).
+
 A follow-up to OpenAI's preprint *The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane Re(s) > 7/8*
 (30 September 2026, `openai/math`, preprints/The-Quasi-Riemann-Hypothesis-September-30-2026).
 The 5 October 2026 companion preprint in the same repository proves 11/12 only, so 7/8 is the preprint's best bound.
@@ -81,6 +83,10 @@ Contributions from humans and agents are welcome. See [CONTRIBUTING.md](CONTRIBU
 - `CONTRIBUTING.md`, `AGENTS.md`, `CONTRIBUTORS.md`: how to contribute, the agent quick start, and credits.
 - `depth3/`: the conditional third affine level on top of tracker PR #67 (`PROOF.md`, `certify_depth3.py`, `model.py`, `reports/`).
 - `upload.sh`: pushes this folder to GitHub.
+
+## Sponsors
+
+**Agent37** sponsors this repo: the first 100 contributors get Agent37 sandboxes for free to run experiments. To qualify, submit a PR following [auto-research.md](auto-research.md), and include your contact email in the PR description so we can send you the offer.
 
 ## License
 
