@@ -42,11 +42,14 @@ RECORDS = [
     ("2026-10-16 16:03", "Zhongpai Gao", Fr(218709, 250000), "0.874836"),
     ("2026-10-17 11:32", "Zhongpai Gao", Fr(87483, 100000), "0.87483"),
     ("2026-10-20 00:51", "Sil", Fr(874828524351, 10**12), "0.8748285"),
-    ("2026-10-20 01:49", "ArviFoxy (current record)", Fr(174963413, 200000000), "0.874817065"),
+    ("2026-10-20 01:49", "ArviFoxy (PR #67)", Fr(174963413, 200000000), "0.874817065"),
+    ("2026-10-20 23:14", "Zhongpai Gao · PR #68 (current record)", Fr(8748087, 10**7), "0.8748087"),
 ]
-CONDITIONAL = [
-    ("2026-10-20 15:00", "rohanarun · 3 levels (conditional)", Fr(874812431, 10**9), "≤ 0.874812431  (−4.6·10⁻⁶)"),
-    ("2026-10-20 21:00", "rohanarun · 4 levels (conditional)", Fr(437405141, 500000000), "≤ 0.874810282  (−6.8·10⁻⁶)"),
+CONDITIONAL = [   # only results that beat every earlier bound (Lean or conditional); label: gain vs the Lean record when posted
+    ("2026-10-20 15:07", "rohanarun · 3 levels (conditional)", Fr(874812431, 10**9), "≤ 0.874812431  (−4.6·10⁻⁶)"),
+    ("2026-10-20 15:39", "rohanarun · 4 levels (conditional)", Fr(437405141, 500000000), "≤ 0.874810282  (−6.8·10⁻⁶)"),
+    ("2026-10-20 17:18", "Sudarsh3301 · 6 levels (conditional)", Fr(874809989, 10**9), "≤ 0.874809989  (−7.1·10⁻⁶)"),
+    ("2026-10-21 11:59", "rohanarun · 6 stages on PR #68 (cond.)", Fr(874807999, 10**9), "≤ 0.874807999  (−7.0·10⁻⁷)"),
 ]
 
 
@@ -59,53 +62,92 @@ y = [float(r[2]) for r in RECORDS]
 tc = [ts(r[0]) for r in CONDITIONAL]
 yc = [float(r[2]) for r in CONDITIONAL]
 
-fig = plt.figure(figsize=(14, 7.4), facecolor=SURF)
-fig.text(0.05, 0.945, "Quasi-RH: the zero-free boundary θ over time", fontsize=17, weight="bold")
-fig.text(0.05, 0.905, "Best all-moduli Dirichlet boundary (zero-free for Re s > θ). Lower is better. "
-         "Blue: Lean-verified records. Orange: conditional, not Lean-verified (gain vs current record in brackets).", fontsize=11, color=INK2)
-ax = fig.add_axes([0.08, 0.12, 0.90, 0.74], facecolor=SURF)
+fig = plt.figure(figsize=(15, 11), facecolor=SURF)
+fig.text(0.05, 0.955, "Quasi-RH: the zero-free boundary θ over time", fontsize=17, weight="bold")
+fig.text(0.05, 0.928, "Best all-moduli Dirichlet boundary (zero-free for Re s > θ). Lower is better. "
+         "Blue: Lean-verified records. Orange: conditional, not Lean-verified (gain vs the Lean record when posted).",
+         fontsize=11, color=INK2)
+ax = fig.add_axes([0.075, 0.47, 0.62, 0.43], facecolor=SURF)     # full history
+zx = fig.add_axes([0.075, 0.08, 0.50, 0.30], facecolor=SURF)     # Oct 20-21 zoom
 
-ax.step(t + [tc[-1]], y + [y[-1]], where="post", color=BLUE, lw=2, zorder=2)
-ax.scatter(t, y, s=46, color=BLUE, edgecolor=SURF, linewidth=2, zorder=3)
-ax.plot([t[-1]] + tc, [y[-1]] + yc, color=ORANGE, lw=2, ls=(0, (3, 3)), zorder=2)
-ax.scatter(tc, yc, s=70, facecolor=SURF, edgecolor=ORANGE, linewidth=2.2, zorder=4)
+ZOOM_FROM = datetime(2026, 10, 19, 18)
+end = max(t[-1], tc[-1]) + (datetime(2026, 10, 21, 18) - max(t[-1], tc[-1]))
+# Overall best bound so far (Lean or conditional). Blue = held by a Lean record, dashed orange =
+# held by a conditional result. Every dot sits on a corner of this one line.
+events = sorted([(tt, yy, False) for tt, yy in zip(t, y)] + [(tt, yy, True) for tt, yy in zip(tc, yc)])
+segs, best, holder = [], None, None      # (x0, x1, y_level, conditional) horizontal pieces + vertical drops
+for k, (tt, yy, cond) in enumerate(events):
+    if best is not None and yy >= best:
+        continue
+    segs.append(("v", tt, best, yy, cond))
+    best, holder = yy, cond
+    nxt = next((e[0] for e in events[k + 1:] if e[1] < best), end)
+    segs.append(("h", tt, nxt, best, cond))
 
-# early records: labels beside the points (offsets in points)
+for a_ in (ax, zx):
+    for s in segs:
+        st = dict(color=ORANGE, lw=1.8, ls=(0, (3, 2))) if s[4] else dict(color=BLUE, lw=2)
+        if s[0] == "h":
+            a_.plot([s[1], s[2]], [s[3], s[3]], zorder=2, solid_capstyle="butt", **st)
+        elif s[2] is not None:
+            a_.plot([s[1], s[1]], [s[2], s[3]], zorder=2, **st)
+    a_.scatter(t, y, s=46, color=BLUE, edgecolor=SURF, linewidth=2, zorder=3)
+    a_.scatter(tc, yc, s=70, facecolor=SURF, edgecolor=ORANGE, linewidth=2.2, zorder=4)
+    a_.grid(axis="y", color=GRID, lw=0.8)
+    a_.set_axisbelow(True)
+    for s in ("left", "right", "top"):
+        a_.spines[s].set_visible(False)
+    a_.spines["bottom"].set_color(GRID)
+    a_.tick_params(length=0)
+
+
+def column(a_, pts, x, top, bottom, fs=9.5):
+    """Label column with leader lines; pts sorted by theta (monotone in time, so no crossings)."""
+    pts = sorted(pts, key=lambda r: -r[1])
+    stp = (top - bottom) / max(len(pts) - 1, 1)
+    for k, (tx, yy, label, cond) in enumerate(pts):
+        a_.annotate(label, (tx, yy), xytext=(x, top - k * stp), textcoords="data", ha="left", va="center",
+                    annotation_clip=False, fontsize=fs, color=ORANGE_TEXT if cond else INK,
+                    weight="bold" if cond else "normal",
+                    arrowprops=dict(arrowstyle="-", color=ORANGE if cond else MUTED, lw=0.7, shrinkA=3, shrinkB=4,
+                                    relpos=(0, 0.5)))
+
+
+# top panel: early labels beside the points, Oct 13-17 in a column
 EARLY = {0: (10, -16, "left"), 1: (-12, 14, "right"), 2: (-12, 0, "right"),
          3: (12, 14, "left"), 4: (-12, 0, "right"), 5: (-12, -12, "right")}
 for i, (dx, dy, ha) in EARLY.items():
     ax.annotate(f"{RECORDS[i][1]}  {RECORDS[i][3]}", (t[i], y[i]), xytext=(dx, dy),
                 textcoords="offset points", ha=ha, va="center", fontsize=9.5, color=INK,
                 arrowprops=dict(arrowstyle="-", color=MUTED, lw=0.7, shrinkA=0, shrinkB=4))
-
-# crowded stretch and conditional points: a label column on the right, with leader lines
-late = [(t[i], y[i], f"{RECORDS[i][1]}  {RECORDS[i][3]}", False) for i in range(6, len(RECORDS))]
-late += [(tc[k], yc[k], f"{CONDITIONAL[k][1]}  {CONDITIONAL[k][3]}", True) for k in range(len(CONDITIONAL))]
-col_x = datetime(2026, 10, 22, 6)
-top, bottom = 0.874895, 0.874795
-step = (top - bottom) / (len(late) - 1)
-for k, (tx, yy, label, cond) in enumerate(late):
-    ax.annotate(label, (tx, yy), xytext=(col_x, top - k * step), textcoords="data", ha="left", va="center",
-                fontsize=9.5, color=ORANGE_TEXT if cond else INK, weight="bold" if cond else "normal",
-                arrowprops=dict(arrowstyle="-", color=ORANGE if cond else MUTED, lw=0.7, shrinkA=3, shrinkB=4,
-                                relpos=(0, 0.5)))
-
-ax.set_ylim(0.87478, 0.875025)
+mid = [(t[i], y[i], f"{RECORDS[i][1]}  {RECORDS[i][3]}", False) for i in range(6, len(RECORDS)) if t[i] < ZOOM_FROM]
+column(ax, mid, datetime(2026, 10, 22, 12), 0.874905, 0.874835)
+ax.add_patch(plt.Rectangle((mdates.date2num(ZOOM_FROM), 0.874804), mdates.date2num(end) - mdates.date2num(ZOOM_FROM),
+                           0.000028, fill=False, ec=MUTED, lw=0.9, ls=(0, (2, 2)), zorder=1))
+ax.annotate("Oct 20–21: zoomed below", (ZOOM_FROM, 0.874804), xytext=(-8, 0), textcoords="offset points",
+            ha="right", va="center", fontsize=9, color=MUTED)
+ax.set_ylim(0.874795, 0.875025)
 ax.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.5f"))
-ax.set_xlim(datetime(2026, 9, 29), datetime(2026, 11, 1))
+ax.set_xlim(datetime(2026, 9, 29), end)
 ax.set_xticks([datetime(2026, 9, 30)] + [datetime(2026, 10, d) for d in (3, 6, 9, 12, 15, 18, 21)])
 ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
-ax.grid(axis="y", color=GRID, lw=0.8)
-ax.set_axisbelow(True)
-for s in ("left", "right", "top"):
-    ax.spines[s].set_visible(False)
-ax.spines["bottom"].set_color(GRID)
-ax.tick_params(length=0)
 ax.set_ylabel("θ")
 
-fig.text(0.05, 0.02, "Sources: QuasiRiemannTracker submissions and admission records (first verification times); "
+# bottom panel: the last two days
+recent = [(t[i], y[i], f"{RECORDS[i][1]}  {RECORDS[i][3]}", False) for i in range(len(RECORDS)) if t[i] >= ZOOM_FROM]
+recent += [(tc[k], yc[k], f"{CONDITIONAL[k][1]}  {CONDITIONAL[k][3]}", True) for k in range(len(CONDITIONAL))]
+column(zx, recent, end + (end - ZOOM_FROM) * 0.04, 0.874829, 0.874806)
+zx.set_xlim(ZOOM_FROM, end)
+zx.set_ylim(0.874804, 0.874832)
+zx.yaxis.set_major_formatter(mticker.FormatStrFormatter("%.6f"))
+zx.xaxis.set_major_locator(mdates.HourLocator(byhour=[0, 12]))
+zx.xaxis.set_major_formatter(mdates.DateFormatter("%b %d, %H:%M"))
+zx.set_ylabel("θ")
+zx.set_title("Oct 20–21 (UTC)", fontsize=11, color=INK2, loc="left", pad=8)
+
+fig.text(0.05, 0.015, "Sources: QuasiRiemannTracker submissions and admission records (first verification times); "
          "OpenAI preprint dated Sep 30, 2026.\n"
-         "Only bounds that beat the record at the time are shown. Conditional results: "
+         "Only bounds that beat every earlier bound at the time are shown. Conditional results: "
          "github.com/rohanarun/quasi-rh-hillclimb (depth3/PROOF.md)", fontsize=8.5, color=MUTED)
 
 out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "graphs")
@@ -117,5 +159,5 @@ with open(os.path.join(out_dir, "timeline.csv"), "w", newline="") as f:
     for r in RECORDS:
         w.writerow([r[0], r[1], str(r[2]), f"{float(r[2]):.12f}", "Lean-verified record"])
     for r in CONDITIONAL:
-        w.writerow([r[0], r[1], str(r[2]), f"{float(r[2]):.12f}", "conditional (H1-H5), not Lean-verified"])
+        w.writerow([r[0], r[1], str(r[2]), f"{float(r[2]):.12f}", "conditional, not Lean-verified"])
 print("wrote graphs/timeline.png and graphs/timeline.csv")

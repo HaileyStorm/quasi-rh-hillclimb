@@ -239,6 +239,24 @@ def main():
         print("\n   Lean (PR #67): class bound in [0.874817064464, 0.874817064465], highTwo 2.30e-8 / 2.10e-8")
         print(f"   here:          class bound in [{float(th.lo):.12f}, {float(th.hi):.12f}]")
         width_floor_room(c)
+    elif any(k in sys.argv for k in ("--four-tight", "--five-b", "--six-b", "--seven")):
+        # constrained re-optimisations (search: constrained_search.py); branch-D room held at 1.52e-3
+        pts = {
+            "--four-tight": ((Q(31901, 50000), Q(685207, 10**6), Q(176463, 250000), Q(727369, 10**6)),
+                             Q(2016033, 50000000), Q(874810187, 10**9), "four affine levels, tightened"),
+            "--five-b": ((Q(31901, 50000), Q(173387, 250000), Q(708041, 10**6), Q(722001, 10**6), Q(368057, 500000)),
+                       Q(201661, 5000000), Q(874810034, 10**9), "five affine levels"),
+            "--six-b": ((Q(31901, 50000), Q(696093, 10**6), Q(705069, 10**6), Q(178883, 250000), Q(145291, 200000),
+                       Q(737649, 10**6)), Q(806713, 20000000), Q(874809988, 10**9), "six affine levels"),
+            "--seven": ((Q(31901, 50000), Q(69749, 100000), Q(176603, 250000), Q(714969, 10**6), Q(28943, 40000),
+                         Q(366071, 500000), Q(370539, 500000)), Q(4033753, 100000000), Q(874809963, 10**9),
+                        "seven affine levels"),
+        }
+        key = next(k for k in pts if k in sys.argv)
+        q, s, th, label = pts[key]
+        c, th, out = certify(q, s, th, label)
+        width_floor_room(c)
+        indicators(c)
     elif "--four" in sys.argv:
         q = (Q(31901, 50000), Q(687, 1000), Q(4419, 6250), Q(36399, 50000))
         s = Q(4031793, 100000000)
