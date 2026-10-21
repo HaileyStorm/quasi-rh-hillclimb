@@ -1,6 +1,6 @@
 # Quasi-RH: pushing the zero-free half-plane slightly past 7/8
 
-> **We're now sponsored by Agent37, so the first 100 contributors get Agent37 sandboxes for free to run experiments!** To qualify, submit a PR using our [auto-research.md](auto-research.md). See [Sponsors](#sponsors).
+> **We're now sponsored by Agent37, so the first 100 contributors get Agent37 sandboxes for free to run experiments!** To qualify, submit a PR using our [auto-research.md](auto-research.md) and include your contact email in the PR description to redeem the offer. See [Sponsors](#sponsors).
 
 A follow-up to OpenAI's preprint *The Quasi-Riemann Hypothesis: A Zero-Free Half-Plane Re(s) > 7/8*
 (30 September 2026, `openai/math`, preprints/The-Quasi-Riemann-Hypothesis-September-30-2026).
@@ -86,7 +86,7 @@ Contributions from humans and agents are welcome. See [CONTRIBUTING.md](CONTRIBU
 
 ## Sponsors
 
-**Agent37** sponsors this repo: the first 100 contributors get Agent37 sandboxes for free to run experiments. To qualify, submit a PR following [auto-research.md](auto-research.md).
+**Agent37** sponsors this repo: the first 100 contributors get Agent37 sandboxes for free to run experiments. To qualify, submit a PR following [auto-research.md](auto-research.md), and include your contact email in the PR description so we can send you the offer.
 
 ## License
 
