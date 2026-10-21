@@ -21,5 +21,4 @@ time_utc,contributor,theta_exact,theta_decimal,status
 2026-10-20 15:07,rohanarun · 3 levels (conditional),874812431/1000000000,0.874812431000,"conditional, not Lean-verified"
 2026-10-20 15:39,rohanarun · 4 levels (conditional),437405141/500000000,0.874810282000,"conditional, not Lean-verified"
 2026-10-20 17:18,Sudarsh3301 · 6 levels (conditional),874809989/1000000000,0.874809989000,"conditional, not Lean-verified"
-2026-10-21 01:38,rohanarun · 7 levels (conditional),874809963/1000000000,0.874809963000,"conditional, not Lean-verified"
 2026-10-21 11:59,rohanarun · 6 stages on PR #68 (cond.),874807999/1000000000,0.874807999000,"conditional, not Lean-verified"
