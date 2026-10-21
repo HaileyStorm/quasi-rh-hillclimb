@@ -1,4 +1,4 @@
-# Nested affine levels: θ ≤ 0.874812431 (three levels), θ ≤ 0.874810187 (four levels) and θ ≤ 0.874809963 (seven levels), conditionally
+# Nested affine levels: θ ≤ 0.874812431 (three levels), θ ≤ 0.874810187 (four levels) θ ≤ 0.874809963 (seven levels), and θ ≤ 0.874807999 on tracker PR #68 (six stages), conditionally
 
 **Status: conditional, not Lean-verified.** This is a proposal for the Lean tracker
 ([GTimG/QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker)), whose record
@@ -213,6 +213,44 @@ Points (q₀ = 31901/50000 in all; exact values in `certify_depth3.py`):
 
 Reproduce: `python certify_depth3.py --four-tight` (and `--five`, `--six`, `--seven`); saved
 outputs `certify_four_tight_output.txt` etc. The search is `python constrained_n.py N "[q1,...]" s`.
+
+## Update 2: past tracker PR #68 (0.8748087), conditionally: θ ≤ 0.874807999 at six stages
+
+Tracker PR #68 (Gaozhongpai, `gao-five-step-affine-20261020`) proves **0.8748087 in Lean** with
+five affine stages. Its stages are exactly the chain of `model.py`: at PR #68's junctions
+(0.638021915 / 0.676506091 / 0.693781289 / 0.711716695 / 0.730301837) this port gives the class
+bound **0.87480867409 ≤ 0.8748087** and PR #68's stage slopes (λ₁ = 6k₀ = 4.0184, …) and prices
+digit for digit (`python certify_gao_depth.py --pr68`, 78/78).
+
+Two consequences:
+
+1. **The branch-D room is not an obstruction.** At PR #68's point the room of
+   `width_floor_room` is −8.9·10⁻³, yet PR #68 checks in Lean. The room condition in the
+   sections above was our reading of PR #67's `directDeletionRoom`; PR #68 restructures that
+   step. The constrained points of Update 1 were therefore over-cautious.
+2. **What PR #68 does require of each stage** is its `RegionalStage` fields plus two proved
+   caps: `amplifierRatio ≤ 7` and `lam ≤ 5` (`FixedStages.lean`). `certify_gao_depth.py` checks
+   these for every stage, on top of every check of `certify_depth3.py` except the room.
+
+Re-optimising under PR #68's own per-stage conditions, with one more stage:
+
+| stages | claimed θ | below PR #68 | K cap needed | `certify_gao_depth.py` |
+|---|---|---|---|---|
+| 5 (PR #68, Lean) | 0.8748087 | — | 7 (proved) | `--pr68` 78/78 |
+| **6** | **874807999/10⁹** | **7.0·10⁻⁷** | **7 (PR #68's cap)** | `--six` 88/88 |
+| 6 | 874807729/10⁹ | 9.7·10⁻⁷ | 8 | `--six-k8 --kcap 8` 88/88 |
+| 8 | 874806549/10⁹ | 2.15·10⁻⁶ | 12 | `--eight-k12 --kcap 12` 108/108 |
+
+Six-stage point: q = 0.638023 / 0.666243 / 0.68225 / 0.698599 / 0.715299 / 0.732368, window top
+s = 4039727/10⁸; every stage has K ≤ 6.99974 and λ ≤ 4.39.
+
+**Hypothesis (replaces H1–H5 for these points).** *PR #68's Lean proof, instantiated with six
+(resp. eight) stages instead of five.* Concretely: its `Fin 5` stage index becomes `Fin 6`,
+`FixedStages` gets the new stage data (which satisfies every field and cap that PR #68 proves
+for its own stages; K ≤ 7 at six stages), and the 38 `Geometry/Certificate*.lean` LP
+certificates are regenerated for the new constants. Nothing else in PR #68 is specific to
+five stages as far as we read it, but we have not built it; this is not Lean-verified.
+The K ≤ 8 and K ≤ 12 rows additionally need PR #68's ratio cap re-bracketed.
 
 ## What is checked here, and how
 

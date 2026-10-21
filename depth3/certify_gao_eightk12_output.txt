@@ -1,0 +1,162 @@
+
+=== eight-k12 ===
+junctions: q0 = 25521/40000 = 0.638025, q1 = 669447/1000000 = 0.669447, q2 = 679457/1000000 = 0.679457, q3 = 689971/1000000 = 0.689971, q4 = 701021/1000000 = 0.701021, q5 = 356297/500000 = 0.712594, q6 = 4529/6250 = 0.724640, q7 = 737081/1000000 = 0.737081   window top s = 2022929/50000000 = 0.04045858
+
+-- regions (step j deletes its LOW children into T_j; T_{n-1} is the old region)
+   T_0: price 0.662078852737, intercept 0.988993671178
+   T_1: price 0.673173499654, intercept 0.990752163878
+   T_2: price 0.684780449994, intercept 0.992477137811
+   T_3: price 0.696925213415, intercept 0.994157388392
+   T_4: price 0.709582233804, intercept 0.995773507560
+   T_5: price 0.722684741873, intercept 0.997301742655
+   T_6: price 0.736135753045, intercept 0.998717570860
+   T_7: price 0.749833333333, intercept 1.000000000000
+  [OK] junctions increase and stay below 3/4
+  [OK] q0 in [3/5, 17/25] and rho(q0) in [1/4, 23/50] (first-step constants)
+  [OK] later junctions in [3/5, 3/4) (inside the zero-density range)
+  [OK] step 0: price of T_0 <= slot price (rate gap, TwoLevelRate)   6.620788527e-01
+  [OK] step 0: k - q I > 0 (amplifier ratio defined)
+  [OK] step 0: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 1: price of T_1 <= slot price (rate gap, TwoLevelRate)   6.731734997e-01
+  [OK] step 1: k - q I > 0 (amplifier ratio defined)
+  [OK] step 1: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 2: price of T_2 <= slot price (rate gap, TwoLevelRate)   6.847804500e-01
+  [OK] step 2: k - q I > 0 (amplifier ratio defined)
+  [OK] step 2: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 3: price of T_3 <= slot price (rate gap, TwoLevelRate)   6.969252134e-01
+  [OK] step 3: k - q I > 0 (amplifier ratio defined)
+  [OK] step 3: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 4: price of T_4 <= slot price (rate gap, TwoLevelRate)   7.095822338e-01
+  [OK] step 4: k - q I > 0 (amplifier ratio defined)
+  [OK] step 4: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 5: price of T_5 <= slot price (rate gap, TwoLevelRate)   7.226847419e-01
+  [OK] step 5: k - q I > 0 (amplifier ratio defined)
+  [OK] step 5: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 6: price of T_6 <= slot price (rate gap, TwoLevelRate)   7.361357530e-01
+  [OK] step 6: k - q I > 0 (amplifier ratio defined)
+  [OK] step 6: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 7: price of T_7 <= slot price (rate gap, TwoLevelRate)   7.498333333e-01
+  [OK] step 7: k - q I > 0 (amplifier ratio defined)
+  [OK] step 7: amplifier cost 5 - 6 rho(q_j) > 0
+  [OK] step 0: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   4.694e-10
+  [OK] step 1: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.473e-10
+  [OK] step 2: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.524e-10
+  [OK] step 3: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.576e-10
+  [OK] step 4: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.624e-10
+  [OK] step 5: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.662e-10
+  [OK] step 6: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.688e-10
+  [OK] step 7: LOW reserve alpha(1 - q_j I_j/k_j) >= 1e-10   1.701e-10
+
+-- first-step ledger (ChannelCertificates.lean, at the new region T_0)
+  [OK] channel sum q + W + W' > 0
+  [OK] HIGH reserve alone reaches the fee below 3/4 (bin top exists)
+   bin top 0.661877471609
+  [OK] q0 <= bin top
+  [OK] rate channel > fee on [q0, binTop] (first cell, both branches of the common rate)
+  [OK] linear channel > fee on [q0, binTop] (first cell)
+  [OK] inverse channel > fee on [q0, binTop] (first cell)
+  [OK] capped channel > fee on [q0, binTop] (first cell)
+  [OK] mixed channel = fee at the junction (first cell, exact)
+  [OK] mixed channel > fee on (q0, binTop] (first cell)
+  [OK] HIGH reserve alone > fee on [binTop, 3/4] (first cell)
+  [OK] 2 supplied width <= live frequency (first cell)
+  [OK] rate channel > fee on [q0, binTop] (top cell, both branches of the common rate)
+  [OK] linear channel > fee on [q0, binTop] (top cell)
+  [OK] inverse channel > fee on [q0, binTop] (top cell)
+  [OK] capped channel > fee on [q0, binTop] (top cell)
+  [OK] mixed channel = fee at the junction (top cell, exact)
+  [OK] mixed channel > fee on (q0, binTop] (top cell)
+  [OK] HIGH reserve alone > fee on [binTop, 3/4] (top cell)
+  [OK] 2 supplied width <= live frequency (top cell)
+  [OK] dominance: c(d)(1 - 6r) <= r(6 rho(d) - 1 - tail) on [q0, binTop]
+  [OK] half gain, inverse cap, plain cap > 0 on [q0, binTop]
+  [OK] 2 capCoefficient < common rate on [q0, binTop]
+  [OK] capCoefficient < 1/20 on [q0, binTop]
+
+-- top row (TopRow.lean) and window top (WindowTangency.lean)
+  [OK] plane slope lambda > 0   lambda = 3.746098953809
+   plane intercept B = 0.982464694060
+  [OK] rootA2 != 0 and discriminant > 0
+  [OK] delta* >= 0   [0.463205275857456, 0.463205275857456]
+  [OK] kappa2 >= 0 (square term of the cleared margin)   [4.35540585499661, 4.35540585499661]
+  [OK] cutoff denominator > 0 on [0, 3/4] (affine: both ends)
+   class bound thetaMin in [0.874806548871032, 0.874806548871032]   (width 1.9e-57)
+  [OK] class bound <= claimed theta = 874806549/1000000000 = 0.874806549   room 1.290e-10
+  [OK] balanced window top <= s (capped top-row line holds on the window)   balancedTop [0.0404585749860142, 0.0404585749860142], s - top >= 5.014e-09
+
+-- joint HIGH reserves of the nested steps (TwoLevelHigh.lean; depth >= 3 extrapolated, see PROOF.md)
+  [OK] depth 2: reserve at q_1, first cell > 0   2.4728e-07
+  [OK] depth 2: reserve at q_1, top cell > 0   2.3830e-07
+  [OK] depth 2: growth in the bin >= 0 at both cells (reserve rises from q_1 to 3/4)   0.3199, 0.3114
+  [OK] depth 2: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 2: total amplifier width <= 1/6   0.01002
+  [OK] depth 3: reserve at q_2, first cell > 0   2.4143e-07
+  [OK] depth 3: reserve at q_2, top cell > 0   2.3331e-07
+  [OK] depth 3: growth in the bin >= 0 at both cells (reserve rises from q_2 to 3/4)   0.3262, 0.3170
+  [OK] depth 3: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 3: total amplifier width <= 1/6   0.01119
+  [OK] depth 4: reserve at q_3, first cell > 0   2.3629e-07
+  [OK] depth 4: reserve at q_3, top cell > 0   2.2829e-07
+  [OK] depth 4: growth in the bin >= 0 at both cells (reserve rises from q_3 to 3/4)   0.3325, 0.3231
+  [OK] depth 4: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 4: total amplifier width <= 1/6   0.01241
+  [OK] depth 5: reserve at q_4, first cell > 0   2.3245e-07
+  [OK] depth 5: reserve at q_4, top cell > 0   2.2453e-07
+  [OK] depth 5: growth in the bin >= 0 at both cells (reserve rises from q_4 to 3/4)   0.3392, 0.3296
+  [OK] depth 5: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 5: total amplifier width <= 1/6   0.01367
+  [OK] depth 6: reserve at q_5, first cell > 0   2.3059e-07
+  [OK] depth 6: reserve at q_5, top cell > 0   2.2270e-07
+  [OK] depth 6: growth in the bin >= 0 at both cells (reserve rises from q_5 to 3/4)   0.3463, 0.3365
+  [OK] depth 6: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 6: total amplifier width <= 1/6   0.01499
+  [OK] depth 7: reserve at q_6, first cell > 0   2.3108e-07
+  [OK] depth 7: reserve at q_6, top cell > 0   2.2314e-07
+  [OK] depth 7: growth in the bin >= 0 at both cells (reserve rises from q_6 to 3/4)   0.3537, 0.3437
+  [OK] depth 7: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 7: total amplifier width <= 1/6   0.01634
+  [OK] depth 8: reserve at q_7, first cell > 0   2.3381e-07
+  [OK] depth 8: reserve at q_7, top cell > 0   2.2576e-07
+  [OK] depth 8: growth in the bin >= 0 at both cells (reserve rises from q_7 to 3/4)   0.3616, 0.3514
+  [OK] depth 8: reserve is affine in the cell (exact second difference = 0)
+  [OK] depth 8: total amplifier width <= 1/6   0.01773
+
+-- PR #68 per-stage side conditions (RegionalStage fields, ratio <= 7, slope <= 5)
+  [OK] stage 0: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 3.4218, lam = 3.7461
+  [OK] stage 1: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 11.2503, lam = 3.9725
+  [OK] stage 2: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 10.8523, lam = 4.0390
+  [OK] stage 3: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 10.4680, lam = 4.1087
+  [OK] stage 4: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 10.1385, lam = 4.1816
+  [OK] stage 5: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 9.8860, lam = 4.2575
+  [OK] stage 6: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 9.7201, lam = 4.3361
+  [OK] stage 7: RegionalStage fields, amplifierRatio <= 12, lam <= 5   K = 9.6333, lam = 4.4168
+
+-- H4 feasibility: width floor vs direct-deletion room
+   max overshoot over old = 3.8619e-03; width floor W = 0.5527
+  [FAIL] direct-deletion room at that width floor >= 1.5e-3   -2.3096e-02
+   (branch-D room is not a PR #68 condition; reported only: below 1.5e-3)
+
+-- indicators for the retuned constants (H4; values, not checks)
+   first cell: overshoot of the step-1 child over the OLD region = 3.861917e-03   (record cap 7/2500 = 2.8e-3)
+   first cell: slot cap (b - d_0)/(2/5) = 0.069343   (record cap 0.0681)
+   first cell: amplifiers a_j = ['3.995846e-03', '1.463367e-03', '1.204182e-03', '1.252672e-03', '1.303718e-03', '1.351994e-03', '1.393353e-03', '1.424883e-03'], deletions d_j = ['6.262835e-03', '2.185933e-03', '1.772270e-03', '1.815542e-03', '1.859742e-03', '1.897285e-03', '1.922820e-03']
+   top cell: overshoot of the step-1 child over the OLD region = 3.464288e-03   (record cap 7/2500 = 2.8e-3)
+   top cell: slot cap (b - d_0)/(2/5) = 0.065886   (record cap 0.0681)
+   top cell: amplifiers a_j = ['8.998751e-03', '1.021726e-03', '1.170110e-03', '1.217228e-03', '1.266830e-03', '1.313740e-03', '1.353929e-03', '1.384567e-03'], deletions d_j = ['1.410407e-02', '1.526224e-03', '1.722125e-03', '1.764173e-03', '1.807121e-03', '1.843602e-03', '1.868415e-03']
+   step 1: amplifier ratio K = 11.2503 (record uses K <= 3); rate q_1/(6 kappa) = 0.1488 (record: <= 0.15 at level 2)
+   step 2: amplifier ratio K = 10.8523 (record uses K <= 3); rate q_2/(6 kappa) = 0.1510 (record: <= 0.15 at level 2)
+   step 3: amplifier ratio K = 10.4680 (record uses K <= 3); rate q_3/(6 kappa) = 0.1534 (record: <= 0.15 at level 2)
+   step 4: amplifier ratio K = 10.1385 (record uses K <= 3); rate q_4/(6 kappa) = 0.1558 (record: <= 0.15 at level 2)
+   step 5: amplifier ratio K = 9.8860 (record uses K <= 3); rate q_5/(6 kappa) = 0.1584 (record: <= 0.15 at level 2)
+   step 6: amplifier ratio K = 9.7201 (record uses K <= 3); rate q_6/(6 kappa) = 0.1611 (record: <= 0.15 at level 2)
+   step 7: amplifier ratio K = 9.6333 (record uses K <= 3); rate q_7/(6 kappa) = 0.1638 (record: <= 0.15 at level 2)
+   slope of region T_0: 6 k_0 = 3.9725 (record mesh bound uses <= 4)
+   slope of region T_1: 6 k_1 = 4.0390 (record mesh bound uses <= 4)
+   slope of region T_2: 6 k_2 = 4.1087 (record mesh bound uses <= 4)
+   slope of region T_3: 6 k_3 = 4.1816 (record mesh bound uses <= 4)
+   slope of region T_4: 6 k_4 = 4.2575 (record mesh bound uses <= 4)
+   slope of region T_5: 6 k_5 = 4.3361 (record mesh bound uses <= 4)
+   slope of region T_6: 6 k_6 = 4.4168 (record mesh bound uses <= 4)
+   first-step plane slope lambda = 3.7461
+
+108/108 checks OK

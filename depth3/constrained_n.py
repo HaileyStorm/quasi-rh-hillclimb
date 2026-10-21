@@ -6,6 +6,7 @@ violate:
     joint HIGH reserves >= 1e-9
 q0 is the rate crossing and s the decimal-up window top, as in solve.py.
     python constrained_n.py 5 "[0.6935,0.708,0.722,0.736]" 201661/5000000
+    python constrained_n.py 6 "[0.6662,0.6822,0.6986,0.7153,0.7324]" 4039727/100000000 -1 7   # PR #68 framework
 """
 import sys, ast
 from fractions import Fraction as Q
@@ -13,7 +14,8 @@ from scipy.optimize import minimize
 from solve import crossing, rate, top_at, decimal_up, msqrt
 from model import FIRST_CELL_TOP as FT, Chain, OLD, KAPPA, amp_ratio
 
-NEED = 1.52e-3
+NEED = 1.52e-3   # set to -1 for the PR #68 framework (no room condition)
+KCAP = 99        # PR #68 framework: 7 (its proved amplifierRatio cap)
 
 
 def room(c, W, b):
@@ -47,7 +49,8 @@ def objective(x, s):
     if q0 >= free[0]:
         return 1.0
     c, rm, hs, lows = metrics([q0] + free, s)
-    return (float(c.theta(msqrt)) + max(0, NEED - float(rm)) * 1e-3
+    K = max(float(amp_ratio(c.T[j], c.q[j])) for j in range(1, c.n))
+    return (float(c.theta(msqrt)) + max(0, K - KCAP) * 1e-3 + max(0, NEED - float(rm)) * 1e-3
             + max(0, 1e-9 - float(hs)) * 10 + max(0, 1.15e-10 - float(lows)) * 1e4)
 
 
@@ -61,6 +64,8 @@ def complete(free, s):
 
 if __name__ == "__main__":
     n = int(sys.argv[1]); x0 = ast.literal_eval(sys.argv[2]); s = Q(sys.argv[3])
+    if len(sys.argv) > 4: NEED = float(sys.argv[4])
+    if len(sys.argv) > 5: KCAP = float(sys.argv[5])
     assert len(x0) == n - 1
     for rnd in range(6):
         r = minimize(lambda x: objective(x, s), x0, method="Nelder-Mead",
