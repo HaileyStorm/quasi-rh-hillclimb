@@ -1,4 +1,4 @@
-# Nested affine levels: θ ≤ 0.874812431 (three levels) and θ ≤ 0.874810282 (four levels), conditionally
+# Nested affine levels: θ ≤ 0.874812431 (three levels), θ ≤ 0.874810187 (four levels) and θ ≤ 0.874809963 (seven levels), conditionally
 
 **Status: conditional, not Lean-verified.** This is a proposal for the Lean tracker
 ([GTimG/QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker)), whose record
@@ -171,6 +171,48 @@ the bound would then approach ≈ 0.87480.
 
 The room formula is our reading of `TwoLevelSplit.directDeletionRoom` (it reproduces the
 record's 0.0204), so this check is evidence for H4's feasibility, not part of the proof.
+
+## Update: constrained re-optimisation, θ ≤ 0.874810187 (four levels) and θ ≤ 0.874809963 (seven levels)
+
+The four-level point above raised q₁ until the branch-D room was 2.32·10⁻³, but the
+certifier's threshold is 1.5·10⁻³ (PROOF's own estimate of the requirement is ≈ 1.42·10⁻³).
+`constrained_n.py` minimises the class bound directly with the certifier's constraints as
+penalties (room ≥ 1.52·10⁻³, LOW reserves ≥ 1.15·10⁻¹⁰, HIGH reserves ≥ 10⁻⁹). Holding the
+room at the threshold instead of above it lets deeper chains in: the reason five or more
+levels looked infeasible was only that their *unconstrained* optima overshoot the room, and
+re-optimising under the constraint costs much less than a level gains.
+
+| levels | claimed θ | below PR #67 record | below four-level (0.874810282) | `certify_depth3.py` | room | max K | min LOW reserve |
+|---|---|---|---|---|---|---|---|
+| 4 (previous) | 0.874810282 | 6.78·10⁻⁶ | — | `--four` 65/65 | 2.32·10⁻³ | 5.74 | 2.8·10⁻¹⁰ |
+| 4, tightened | **874810187/10⁹** | 6.88·10⁻⁶ | 9.5·10⁻⁸ | `--four-tight` 65/65 | 1.52·10⁻³ | 5.56 | 2.9·10⁻¹⁰ |
+| 5 | 437405017/(5·10⁸) = 0.874810034 | 7.03·10⁻⁶ | 2.48·10⁻⁷ | `--five` 74/74 | 1.52·10⁻³ | 8.94 | 1.8·10⁻¹⁰ |
+| 6 | 218702497/(2.5·10⁸) = 0.874809988 | 7.08·10⁻⁶ | 2.94·10⁻⁷ | `--six` 83/83 | 1.52·10⁻³ | 12.99 | 1.3·10⁻¹⁰ |
+| 7 | **874809963/10⁹** | 7.10·10⁻⁶ | 3.19·10⁻⁷ | `--seven` 92/92 | 1.52·10⁻³ | 14.11 | 1.2·10⁻¹⁰ |
+
+Points (q₀ = 31901/50000 in all; exact values in `certify_depth3.py`):
+
+- 4, tightened: q = 0.685207 / 0.705852 / 0.727369, s = 2016033/50000000.
+- 7: q = 0.69749 / 0.706412 / 0.714969 / 0.723575 / 0.732142 / 0.741078, s = 4033753/100000000.
+
+**What changes in the hypotheses.**
+
+- *Four levels, tightened* needs exactly the H1–H5 of the previous four-level point, and on
+  every H4 indicator except the room it is at or inside that point's envelope (K 5.56 vs
+  5.74, region slopes ≤ 4.353 vs 4.357, rates ≤ 0.1617 vs 0.1618, total amplifier 0.0166 vs
+  0.0167). It is slightly outside on two: overshoot over old 3.256·10⁻³ vs 3.236·10⁻³ (the
+  width floor absorbs it: that is what the room check measures) and slot cap 0.06886 vs
+  0.06884 (both already above the record's 0.0681). The room is at the threshold
+  (1.52·10⁻³ ≥ 1.5·10⁻³) instead of above it. **This is the safest of the new claims.**
+- *Five to seven levels* need H1–H5 at that depth (one recursive step, as above) and larger
+  H4 caps: the amplifier ratio K grows to 9–14 (record K ≤ 3; four levels already needed
+  K ≤ 6), and the LOW reserves fall towards the 10⁻¹⁰ floor because the junctions bunch
+  together. Region slopes reach 4.44.
+- Past seven levels the gain per level is below 3·10⁻⁸ and the LOW reserves are the binding
+  constraint; the constrained ceiling of this architecture looks like ≈ 0.87480995.
+
+Reproduce: `python certify_depth3.py --four-tight` (and `--five`, `--six`, `--seven`); saved
+outputs `certify_four_tight_output.txt` etc. The search is `python constrained_n.py N "[q1,...]" s`.
 
 ## What is checked here, and how
 
