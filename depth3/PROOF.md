@@ -172,11 +172,59 @@ the bound would then approach ≈ 0.87480.
 The room formula is our reading of `TwoLevelSplit.directDeletionRoom` (it reproduces the
 record's 0.0204), so this check is evidence for H4's feasibility, not part of the proof.
 
+## Update: five and six levels pass the width-floor room test
+
+The table above checks the room only at the unconstrained optima. With the room test imposed
+as a constraint during the search (`constrained_n.py`; the same formulas as
+`width_floor_room`), five and six levels pass it and pass every other check of
+`certify_depth3.py`. The width-floor fix is unchanged: W = overshoot/(7/1000) + 10⁻³,
+room ≥ 1.5·10⁻³. The other H4 caps are not unchanged; see "Cost" below.
+
+| levels | class bound | claimed θ | checks | room − 1.5·10⁻³ | least LOW reserve | max K |
+|---|---|---|---|---|---|---|
+| 4 (above) | 0.8748102817 | 0.874810282 | 65/65 | 8.2·10⁻⁴ | 2.83·10⁻¹⁰ | 5.74 |
+| 5 | 0.8748100441 | **0.874810045** | 74/74 | 1.5·10⁻⁸ | 1.32·10⁻¹⁰ | 12.50 |
+| 6 | 0.8748099885 | **0.874809989** | 83/83 | 1.1·10⁻⁹ | 1.18·10⁻¹⁰ | 13.98 |
+
+- Five levels: q = (31901/50000, 173193/250000, 141679/200000, 358939/500000, 731033/1000000),
+  s = 4033127/100000000. Six levels: q = (31901/50000, 347923/500000, 140837/200000,
+  142669/200000, 361461/500000, 3681/5000), s = 806709/20000000.
+- The room test binds at both points. The test (1.5·10⁻³) keeps about 8·10⁻⁵ above the need
+  stated in `width_floor_room` (≈ 1.42·10⁻³), so the binding is on the test, not the need.
+- The same search at four levels gives 0.8748102223 (q₁ = 0.683139 instead of 0.687), about
+  5.9·10⁻⁸ better than the point above (not certified here). For scale: at the unconstrained
+  four-level optimum of `depth_scan.py` the bound is 0.8748100879, so q₁ = 0.687 costs
+  1.9·10⁻⁷, not the 2·10⁻¹⁰ stated above.
+- The gain per level shrinks (−2.4·10⁻⁷ from the four-level point, then −5.6·10⁻⁸). A seven-level point at 0.8748099726
+  passes the room test but fails the LOW-reserve floor (≥ 10⁻¹⁰) at steps 4–6: the LOW
+  reserves are of order the region margin (10⁻⁸) divided by K, and K grows with depth.
+- **Cost.** Depth five and six need H1–H5 at that depth, with clearly larger H4 re-brackets
+  than four levels:
+  - the amplifier ratio K reaches 12.5 (five) and 14.0 (six), against 5.7 at four levels;
+    K = q/(6k·LR/α), so it rises as the LOW reserve falls toward the 10⁻¹⁰ floor;
+  - if the mask Bwide compounds by 5/2 per extra rebase, it is about 15.6 at four levels,
+    39 at five and 98 at six, against the hard-coded ≤ 20 (estimate, not computed here);
+  - the rate q/(6κ) (≤ 0.164) and the region slopes 6k (≤ 4.41) change little;
+  - the zero room / `zeroSaving` trend with depth is not computed by any script here.
+- **Fair gain.** Against the room-constrained four-level optimum (0.8748102223), five levels
+  gain 1.8·10⁻⁷ and six levels a further 5.6·10⁻⁸. So "five or more levels fail" is false for
+  the room test, but five and six levels need a larger H4 fix than four levels do.
+
+```
+python certify_depth3.py --five   # 74/74
+python certify_depth3.py --six    # 83/83
+python constrained_n.py 5         # how the five-level point was found (search only)
+```
+
+Saved output: `certify_five_output.txt`, `certify_six_output.txt`, `constrained_n_output.txt`.
 ## Update: constrained re-optimisation, θ ≤ 0.874810187 (four levels) and θ ≤ 0.874809963 (seven levels)
+
+Found independently of, and slightly after, the five/six-level update above (PR #2); its
+points are `--five`/`--six`, these are `--five-b`/`--six-b`.
 
 The four-level point above raised q₁ until the branch-D room was 2.32·10⁻³, but the
 certifier's threshold is 1.5·10⁻³ (PROOF's own estimate of the requirement is ≈ 1.42·10⁻³).
-`constrained_n.py` minimises the class bound directly with the certifier's constraints as
+`constrained_search.py` minimises the class bound directly with the certifier's constraints as
 penalties (room ≥ 1.52·10⁻³, LOW reserves ≥ 1.15·10⁻¹⁰, HIGH reserves ≥ 10⁻⁹). Holding the
 room at the threshold instead of above it lets deeper chains in: the reason five or more
 levels looked infeasible was only that their *unconstrained* optima overshoot the room, and
@@ -186,8 +234,8 @@ re-optimising under the constraint costs much less than a level gains.
 |---|---|---|---|---|---|---|---|
 | 4 (previous) | 0.874810282 | 6.78·10⁻⁶ | — | `--four` 65/65 | 2.32·10⁻³ | 5.74 | 2.8·10⁻¹⁰ |
 | 4, tightened | **874810187/10⁹** | 6.88·10⁻⁶ | 9.5·10⁻⁸ | `--four-tight` 65/65 | 1.52·10⁻³ | 5.56 | 2.9·10⁻¹⁰ |
-| 5 | 437405017/(5·10⁸) = 0.874810034 | 7.03·10⁻⁶ | 2.48·10⁻⁷ | `--five` 74/74 | 1.52·10⁻³ | 8.94 | 1.8·10⁻¹⁰ |
-| 6 | 218702497/(2.5·10⁸) = 0.874809988 | 7.08·10⁻⁶ | 2.94·10⁻⁷ | `--six` 83/83 | 1.52·10⁻³ | 12.99 | 1.3·10⁻¹⁰ |
+| 5 | 437405017/(5·10⁸) = 0.874810034 | 7.03·10⁻⁶ | 2.48·10⁻⁷ | `--five-b` 74/74 | 1.52·10⁻³ | 8.94 | 1.8·10⁻¹⁰ |
+| 6 | 218702497/(2.5·10⁸) = 0.874809988 | 7.08·10⁻⁶ | 2.94·10⁻⁷ | `--six-b` 83/83 | 1.52·10⁻³ | 12.99 | 1.3·10⁻¹⁰ |
 | 7 | **874809963/10⁹** | 7.10·10⁻⁶ | 3.19·10⁻⁷ | `--seven` 92/92 | 1.52·10⁻³ | 14.11 | 1.2·10⁻¹⁰ |
 
 Points (q₀ = 31901/50000 in all; exact values in `certify_depth3.py`):
@@ -211,8 +259,8 @@ Points (q₀ = 31901/50000 in all; exact values in `certify_depth3.py`):
 - Past seven levels the gain per level is below 3·10⁻⁸ and the LOW reserves are the binding
   constraint; the constrained ceiling of this architecture looks like ≈ 0.87480995.
 
-Reproduce: `python certify_depth3.py --four-tight` (and `--five`, `--six`, `--seven`); saved
-outputs `certify_four_tight_output.txt` etc. The search is `python constrained_n.py N "[q1,...]" s`.
+Reproduce: `python certify_depth3.py --four-tight` (and `--five-b`, `--six-b`, `--seven`); saved
+outputs `certify_four_tight_output.txt` etc. The search is `python constrained_search.py N "[q1,...]" s`.
 
 ## Update 2: past tracker PR #68 (0.8748087), conditionally: θ ≤ 0.874807999 at six stages
 

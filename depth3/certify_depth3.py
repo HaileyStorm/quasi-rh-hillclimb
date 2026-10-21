@@ -3,6 +3,7 @@ PR #67 (GTimG/QuasiRiemannTracker, two-level-affine-20261019).
 
     python certify_depth3.py          # the three-level point (the new claim)
     python certify_depth3.py --pr67   # PR #67's own point, as a check of this port
+    python certify_depth3.py --five   # five levels (also --four, --six)
 
 All rational quantities are computed exactly (fractions.Fraction). Statements over a
 range of bins are rational functions of the bin d; they are proved by exact real-root
@@ -238,14 +239,14 @@ def main():
         print("\n   Lean (PR #67): class bound in [0.874817064464, 0.874817064465], highTwo 2.30e-8 / 2.10e-8")
         print(f"   here:          class bound in [{float(th.lo):.12f}, {float(th.hi):.12f}]")
         width_floor_room(c)
-    elif "--four-tight" in sys.argv or "--five" in sys.argv or "--six" in sys.argv or "--seven" in sys.argv:
-        # constrained re-optimisations (search: constrained_n.py); branch-D room held at 1.52e-3
+    elif any(k in sys.argv for k in ("--four-tight", "--five-b", "--six-b", "--seven")):
+        # constrained re-optimisations (search: constrained_search.py); branch-D room held at 1.52e-3
         pts = {
             "--four-tight": ((Q(31901, 50000), Q(685207, 10**6), Q(176463, 250000), Q(727369, 10**6)),
                              Q(2016033, 50000000), Q(874810187, 10**9), "four affine levels, tightened"),
-            "--five": ((Q(31901, 50000), Q(173387, 250000), Q(708041, 10**6), Q(722001, 10**6), Q(368057, 500000)),
+            "--five-b": ((Q(31901, 50000), Q(173387, 250000), Q(708041, 10**6), Q(722001, 10**6), Q(368057, 500000)),
                        Q(201661, 5000000), Q(874810034, 10**9), "five affine levels"),
-            "--six": ((Q(31901, 50000), Q(696093, 10**6), Q(705069, 10**6), Q(178883, 250000), Q(145291, 200000),
+            "--six-b": ((Q(31901, 50000), Q(696093, 10**6), Q(705069, 10**6), Q(178883, 250000), Q(145291, 200000),
                        Q(737649, 10**6)), Q(806713, 20000000), Q(874809988, 10**9), "six affine levels"),
             "--seven": ((Q(31901, 50000), Q(69749, 100000), Q(176603, 250000), Q(714969, 10**6), Q(28943, 40000),
                          Q(366071, 500000), Q(370539, 500000)), Q(4033753, 100000000), Q(874809963, 10**9),
@@ -260,6 +261,19 @@ def main():
         q = (Q(31901, 50000), Q(687, 1000), Q(4419, 6250), Q(36399, 50000))
         s = Q(4031793, 100000000)
         c, th, out = certify(q, s, Q(874810282, 10**9), "four affine levels")
+        width_floor_room(c)
+        indicators(c)
+    elif "--five" in sys.argv:      # found by constrained_n.py 5
+        q = (Q(31901, 50000), Q(173193, 250000), Q(141679, 200000), Q(358939, 500000), Q(731033, 1000000))
+        s = Q(4033127, 100000000)
+        c, th, out = certify(q, s, Q(874810045, 10**9), "five affine levels")
+        width_floor_room(c)
+        indicators(c)
+    elif "--six" in sys.argv:       # found by constrained_n.py 6, seeded from the five-level point
+        q = (Q(31901, 50000), Q(347923, 500000), Q(140837, 200000), Q(142669, 200000),
+             Q(361461, 500000), Q(3681, 5000))
+        s = Q(806709, 20000000)
+        c, th, out = certify(q, s, Q(874809989, 10**9), "six affine levels")
         width_floor_room(c)
         indicators(c)
     else:
