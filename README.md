@@ -27,6 +27,12 @@ This covers every Dirichlet L-function, including ζ(s). It comes from re-runnin
 
 applying the edits listed in `AUDIT_SUMMARY.md`. This point is about 99% of the way to the method's limit: with every other structural choice frozen, the edge of feasibility is σ₀ ≈ 7/8 − 4.29·10⁻⁵. An earlier version of this note claimed 7/8 − 1/28000.
 
+## Separate track: a third affine level for the Lean tracker (conditional)
+
+The Lean-verified record is on the [QuasiRiemannTracker](https://github.com/GTimG/QuasiRiemannTracker): ArviFoxy's PR #67, θ = 174963413/200000000 ≈ 0.874817065, well below the bound above. [`depth3/`](depth3/PROOF.md) extends PR #67's two affine levels to three and gets **θ ≤ 874812431/10⁹ ≈ 0.874812431**, about 4.6·10⁻⁶ lower, and a fourth level gets **θ ≤ 0.874810282** (6.8·10⁻⁶ below the record), both **conditional on five structural hypotheses (H1–H5) that are not yet in Lean**. The arithmetic is certified exactly (`python depth3/certify_depth3.py` and `--four`; the same code reproduces PR #67's own constants). It is not a tracker record until the full proof checks in Lean.
+
+![The best boundary over time, with contributors](graphs/timeline.png)
+
 ## Main structural facts
 
 1. **Closed form of the boundary.** With l_x = 1 + ℓ − h and M + ℓ = 1, the low estimate Z^{l_x/2 + b/12} and the Mellin exponent C(s) = l_x/2 + s − 1 + h/6 meet at **σ₀ = 11/12 − ℓ/4** (h cancels). Part I (ℓ = 0) gives 11/12, and the preprint's ℓ = 1/6 gives 7/8.
@@ -73,6 +79,7 @@ Contributions from humans and agents are welcome. See [CONTRIBUTING.md](CONTRIBU
 - `auto-research.md`, `auto-research/`: instructions and tools for agents continuing the hill-climb (`hillclimb.py`, `whatif.py`, `results.md`, `proposals/`). The pipeline already found a slightly better final-section certificate, 7/8 − 1/23304; see `auto-research/results.md`.
 - `auto-research/plot_improvement.py`: regenerates `graphs/improvement.png`.
 - `CONTRIBUTING.md`, `AGENTS.md`, `CONTRIBUTORS.md`: how to contribute, the agent quick start, and credits.
+- `depth3/`: the conditional third affine level on top of tracker PR #67 (`PROOF.md`, `certify_depth3.py`, `model.py`, `reports/`).
 - `upload.sh`: pushes this folder to GitHub.
 
 ## License
